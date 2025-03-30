@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .forms import LoginForm
+from .forms import LoginForm, UserRegisterationForm
 from django.contrib.auth.decorators import login_required
 
 def user_login(request):
@@ -39,4 +39,29 @@ def dashboard(request):
         request,
         'account/dashboard.html',
         {'section': dashboard}
+    )
+    
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegisterationForm(request.POST)
+        if user_form.is_valid():
+            # Create a new object and avoid saving it yet
+            new_user = user_form.save(commit=False)
+            # Set the chosen password
+            new_user.set_password(
+                user_form.cleaned_data['password']
+            )
+            # Save the user object
+            new_user.save()
+            return render(
+                request,
+                'account/register_done.html',
+                {'new_user': new_user}
+            )
+    else:
+        user_form = UserRegisterationForm()
+    return render(
+        request,
+        'account/register.html',
+        {'user_form': user_form}
     )
