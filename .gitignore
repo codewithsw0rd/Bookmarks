@@ -278,3 +278,9 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/django,python,venv
 
 env
+
+.env
+
+cert.crt
+cert.key
+cert.pem
